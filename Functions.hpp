@@ -3,7 +3,6 @@
 #include <sstream>
 #include <string>
 
-
 using namespace std;
 
 struct transaction{
@@ -31,6 +30,4 @@ class User{
     void deposit(bool tf, int money);//check for negative amounts
     void withdrawal(bool tf, int money);//check over draw
     void printHistory(bool tf);//call either public or personal
-
-
 };
