@@ -14,12 +14,14 @@ struct transaction{
 class User{
   private:
     string name;
+    string password;
     float balance;
     float debt;
     transaction *historyHead;
-    string password;
+    
     void printPublicHistory();
     void printPersonalHistory();
+    void loadTransactions(string fileName);
 
   public:
     User(string name);
@@ -30,4 +32,6 @@ class User{
     void deposit(bool tf, int money);//check for negative amounts
     void withdrawal(bool tf, int money);//check over draw
     void printHistory(bool tf);//call either public or personal
+    void loadUserInfo(string line);
+    void addTransaction(string line);
 };
