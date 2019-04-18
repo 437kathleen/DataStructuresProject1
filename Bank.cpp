@@ -115,7 +115,7 @@ int Bank::findAscii(string name){//return ascii value
 
 int Bank::getHash(string name){//returns index
   int value = findAscii(name);
-  int index = value%100;
+  int index = value%tableSize;
   cout<<"name: "<<name<<"  index: "<< index<< endl;
   return index;
 }
