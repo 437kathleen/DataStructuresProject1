@@ -1,23 +1,10 @@
 //Functions
 #include <iostream>
 #include <fstream>
-//#include <sstream>
+#include <sstream>
 #include <string>
 
 using namespace std;
-
-void User::loadTransactions(string fileName){
-  fstream myfile(fileName);
-  if(myfile.is_open()){
-    string line;
-    while(!myfile.eof()){
-      getline(myfile, line);
-      addTransaction(line);
-    }
-  }else{
-    cout<<"File could not be found"<<endl;
-  }
-}
 
 void User::printPublicHistory(){
   if(historyHead == NULL){
@@ -49,6 +36,44 @@ void User::printPersonalHistory(){
   }
 }
 
+void User::loadTransactions(string fileName){
+  fstream myfile(fileName);
+  if(myfile.is_open()){
+    string line;
+    while(!myfile.eof()){
+      getline(myfile, line);
+      addTransaction(line);
+    }
+  }else{
+    cout<<"Transactions could not be found"<<endl;
+  }
+}
+
+User::User(){
+  name = "";
+  password = "";
+  balance = 0.0;
+  debt = 0.0;
+  next = NULL;
+  historyHead = NULL;
+  transactionFile = "";
+}
+
+User::~User();
+void User::getName();
+void User::getBalance(bool tf);
+void User::getDebt(bool tf);
+void User::deposit(bool tf, int money);//check for negative amounts
+void User::withdrawal(bool tf, int money);//check over draw
+void User::saveTransactions();//
+
+void User::printHistory(bool tf){
+  if(tf == true){
+    printPersonalHistory();
+  }else{
+    printPublicHistory();
+  }
+}
 
 void User::loadUserInfo(string line){
   //File construct will be formatted like so
