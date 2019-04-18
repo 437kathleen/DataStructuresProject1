@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iomanip>
+#include "User.hpp"
 
 using namespace std;
 
@@ -14,10 +16,10 @@ void User::printPublicHistory(){
     int i = 0;
     cout<<"HISTORY"<<endl;
     while(temp!=NULL){
-      cout<<"\t"<<i<<": "<<temp.name<<endl;
+      cout<<"\t"<<i<<": "<<temp->name<<endl;
       temp = temp->next;
     }
-    cout<<"END HISTORY"<<endl;
+    cout<<"\t\tEND HISTORY"<<endl;
   }
 }
 
@@ -45,7 +47,7 @@ void User::loadTransactions(string fileName){
       addTransaction(line);
     }
   }else{
-    cout<<"Transactions could not be found"<<endl;
+    //cout<<"Transactions could not be found"<<endl;
   }
 }
 
@@ -59,13 +61,41 @@ User::User(){
   transactionFile = "";
 }
 
-User::~User();
-void User::getName();
-void User::getBalance(bool tf);
-void User::getDebt(bool tf);
-void User::deposit(bool tf, int money);//check for negative amounts
-void User::withdrawal(bool tf, int money);//check over draw
-void User::saveTransactions();//
+User::User(string n, string p){
+  name = n;
+  password = p;
+  balance = 0.0;
+  debt = 0.0;
+  historyHead = NULL;
+}
+
+User::~User(){
+
+}
+
+string User::getName(){
+  return name;
+}
+
+void User::getBalance(bool isUser){
+
+}
+
+void User::getDebt(bool isUser){
+
+}
+
+void User::deposit(bool isUser){//check for negative amounts
+
+}
+
+void User::withdrawal(bool isUser){//check over draw
+
+}
+
+void User::saveTransactions(){
+
+}
 
 void User::printHistory(bool tf){
   if(tf == true){
@@ -96,12 +126,15 @@ void User::loadUserInfo(string line){
 
 void User::addTransaction(string line){
   //empty list
+  stringstream ss;
+  ss<<line;
+  string item;
   if(historyHead == NULL){
     transaction *temp;
     getline(ss, item,',');
-    temp.name = item;
+    temp->name = item;
     getline(ss, item);
-    temp.amount = stof(item);
+    temp->amount = stof(item);
     historyHead = temp;
   }else{//traverse to last element and append on
     transaction *temp = historyHead;
@@ -112,9 +145,9 @@ void User::addTransaction(string line){
       temp = temp->next;
     }//temp == NULL
     getline(ss, item,',');
-    curr.name = item;
+    curr->name = item;
     getline(ss, item);
-    curr.amount = stof(item);
+    curr->amount = stof(item);
     prev->next = curr;//add transaction to list
   }
 }
