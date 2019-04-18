@@ -1,4 +1,5 @@
 //Functions
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -41,14 +42,21 @@ void User::printPersonalHistory(){
 void User::loadTransactions(string fileName){
   fstream myfile(fileName);
   if(myfile.is_open()){
-    string line;
-    while(!myfile.eof()){
-      getline(myfile, line);
-      addTransaction(line);
+    string line,title,item;
+    float price = 0;
+    //cout<<"load transactions"<<endl;
+    while(getline(myfile, line)){
+      stringstream ss;
+      ss<<line;
+      getline(ss,item,',');
+      price = stof(item);
+      getline(ss,item);
+      title = item;
+      addTransaction(price,title);
     }
-  }else{
+  }//else{
     //cout<<"Transactions could not be found"<<endl;
-  }
+  //}
 }
 
 User::User(){
@@ -77,20 +85,46 @@ string User::getName(){
   return name;
 }
 
-void User::getBalance(bool isUser){
-
+float User::getBalance(){//decimal
+  return this->balance;
 }
 
-void User::getDebt(bool isUser){
-
+float User::getDebt(){//demcimal
+  return this->debt;
 }
 
 void User::deposit(bool isUser){//check for negative amounts
-
+  string ans;//how to narrwo to two decimals;
+  cout<<"Deposit amount: \n$";
+  getline(cin,ans);
+  float money = stof(ans);
+  if(money<0){
+    cout<<"Illegal Amount"<<endl;
+    return;
+  }
+  if(isUser == true){//add and show total
+    this->balance = balance + money;
+    cout<<balance<<endl;
+  }else{//just add
+    this->balance = balance + money;
+  }
 }
 
 void User::withdrawal(bool isUser){//check over draw
-
+  string ans;//how to narrwo to two decimals;
+  cout<<"Withdrawal amount: \n$";
+  getline(cin,ans);
+  float money = stof(ans);
+  if(money<0){
+    cout<<"Illegal Amount"<<endl;
+    return;
+  }
+  if(isUser == true){//add and show total
+    this->balance = balance - money;
+    cout<<balance<<endl;
+  }else{//just add
+    this->balance = balance - money;
+  }
 }
 
 void User::saveTransactions(){
@@ -108,6 +142,7 @@ void User::printHistory(bool tf){
 void User::loadUserInfo(string line){
   //File construct will be formatted like so
   // name,password,balance,debt,(file name for transactions)
+  //cout<<"load user info - function"<<endl;
   string item;
   stringstream ss;
   ss<<line;
@@ -124,30 +159,20 @@ void User::loadUserInfo(string line){
   loadTransactions(transactionFile);
 }
 
-void User::addTransaction(string line){
+void User::addTransaction(float price, string title){//format will be amount and the name
   //empty list
-  stringstream ss;
-  ss<<line;
-  string item;
+  transaction *temp = new transaction(price,title);
+  //cout<<price<<"\t"<<title<<endl;
   if(historyHead == NULL){
-    transaction *temp;
-    getline(ss, item,',');
-    temp->name = item;
-    getline(ss, item);
-    temp->amount = stof(item);
+    temp->next = historyHead;
     historyHead = temp;
   }else{//traverse to last element and append on
-    transaction *temp = historyHead;
+    transaction *curr = historyHead;
     transaction *prev;
-    transaction *curr;
-    while(temp!=NULL){//append onto prev
-      prev = temp;
-      temp = temp->next;
-    }//temp == NULL
-    getline(ss, item,',');
-    curr->name = item;
-    getline(ss, item);
-    curr->amount = stof(item);
-    prev->next = curr;//add transaction to list
+    while(curr!=NULL){//append onto prev
+      prev = curr;
+      curr = curr->next;
+    }//curr == NULL
+    prev->next = temp;//add transaction to list
   }
 }
