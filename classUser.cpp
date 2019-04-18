@@ -25,10 +25,12 @@ void User::printPublicHistory(){
   }else{
     transaction *temp = historyHead;
     int i = 0;
+    cout<<"HISTORY"<<endl;
     while(temp!=NULL){
-      cout<<i<<": "<<temp.name<<endl;
+      cout<<"\t"<<i<<": "<<temp.name<<endl;
       temp = temp->next;
     }
+    cout<<"END HISTORY"<<endl;
   }
 }
 
@@ -38,10 +40,12 @@ void User::printPersonalHistory(){
   }else{
     transaction *temp = historyHead;
     int i = 0;
+    cout<<"HISTORY"<<endl;
     while(temp!=NULL){
-      cout<<setw(30)<<temp->name<<"$"<<setprecision(2)<<fixed<<temp->amount<<endl;
+      cout<<"\t"<<setw(30)<<temp->name<<"$"<<setprecision(2)<<fixed<<temp->amount<<endl;
       temp = temp->next;
     }
+    cout<<"\t\tEND HISTORY"<<endl;
   }
 }
 
@@ -61,7 +65,8 @@ void User::loadUserInfo(string line){
   getline(ss, item,',');
   debt = stof(item);
   getline(ss, item);
-  loadTransactions(item);
+  transactionFile = item;
+  loadTransactions(transactionFile);
 }
 
 void User::addTransaction(string line){
