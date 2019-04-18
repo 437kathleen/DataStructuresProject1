@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-//#include <vector>
 #include "Bank.hpp"
 #include "User.hpp"
 
@@ -41,8 +40,8 @@ bool Bank::loadFile(string myfile){
     string line, item, name, password;
     while(getline(accountfile, line)){
       User *newUser = new User;
-      newUser->loadUserInfo(line);
-      addSavedUser(newUser);
+      newUser->loadUserInfo(line);//call function
+      addSavedUser(newUser);//add user to hashtable
     }
     accountfile.close();
     loaded = true;
@@ -57,13 +56,7 @@ void Bank::saveFile(string myfile){
 }
 
 User *Bank::getUser(string name, string password){
-  // Does not check for password
-  if (isInTable(name)){
-    int name_hash = getHash(name);
-    return table[name_hash];
-  }else{
-    return NULL;
-  }
+  //find hash look for user and return
 }
 
 void Bank::addSavedUser(User *savedUser){
@@ -116,7 +109,7 @@ int Bank::findAscii(string name){//return ascii value
     sum = sum + int(name[i]);
     i++;
   }
-  cout<<"Ascii: "<< sum << endl;
+  //cout<<"Ascii: "<< sum << endl;
   return sum;
 }
 
