@@ -2,35 +2,12 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <vector>
+//#include <vector>
+#include "Bank.hpp"
 #include "User.hpp"
 
 using namespace std;
 
-class Bank{
-  private:
-    User** account;
-    int numAccounts;//unnecessary
-    int collisions;//check the efficiency 
-    int tableSize;//arbitrarily set
-  public:
-    Bank(int lines);
-    ~Bank();
-
-    //int countLines(string myfile);//count lines in file
-    bool loadFile(string myfile);//makes entries of data
-  
-    void saveFile(string myfile);//****************need to implement
-    User *getUser(string name, string password);
-  
-    void addSavedUser(User *savedUser);
-    void addUser(string name);
-    bool isInTable(string name);
-    int findAscii(string name);
-    int getHash(int value);
-    int numCollisions();
-    
-};
 
 Bank::Bank(int tableSize){
   collisions = 0;
@@ -46,7 +23,7 @@ Bank::Bank(int tableSize){
 Bank::~Bank(){
   for(int i = 0; i < tableSize; i++){
     User *store = account[i];
-    Node *temp = NULL;
+    User *temp = NULL;
     while(store!=NULL){
       temp = store;
       store = store->next;
@@ -57,58 +34,60 @@ Bank::~Bank(){
 }//delete
 
 bool Bank::loadFile(string myfile){
+  bool loaded = false;
   fstream accountfile(myfile);
   if(accountfile.is_open() == true){
     //int count = numAccounts;
     string line, item, name, password;
-    while(!accountfile.eof){
-      getline(accountfile, line);
+    while(getline(accountfile, line)){
       User *newUser = new User;
-      newUser.loadUserInfo(line);
+      newUser->loadUserInfo(line);
       addSavedUser(newUser);
     }
     accountfile.close();
+    loaded = true;
   }else{
     cout<<"File not found"<<endl;
   }
+  return loaded;
 }
 
-void Bank::saveFile(string myfile){//**************not finished need to be changed
-
+void Bank::saveFile(string myfile){
+  //overwrite the file
 }
 
-User *Bank::getUser(string name, string password){//find user...return the user for later actions
-  
+User *Bank::getUser(string name, string password){
+  //find hash look for user and return
 }
 
 void Bank::addSavedUser(User *savedUser){
-  int index = getHash(savedUser->name);
+  int index = getHash(savedUser->getName());
   if(account[index]!=NULL){///moniter collisions
     collisions++;
   }
+  //cout<<"adding a saved user"<<endl;
   savedUser->next = account[index];//push to front
   account[index] = savedUser;
+  //cout<<"here"<<endl;
 }
 
-void Bank::addUser(string name, string password){
-  if(isInTable(value)==false){
+User *Bank::addUser(string name, string password){
+  User *newUser = new User(name, password);
+  if(isInTable(name)==false){
       // Use the hash function on the key to get the index/slot,
-      int index = getHash(value);
+      int index = getHash(name);
       if(account[index]!=NULL){///moniter collisions
         collisions++;
       }
       // create a new user with the name and password and insert it in this index's list
-      User *newUser = new User;
-      newUser->name = name;
-      newUser->password = password;
-      newUser->balance = 0.0;
-      newUser->debt = 0.0;
-      newUser->historyHead = NULL;
+      //User *newUser = new User;
       newUser->next = account[index];//push to front
       account[index] = newUser;
   }else{
-    cout<<"Invalid username"<<endl;
+    cout<<"Username taken"<<endl;
+    newUser = NULL;
   }
+  return newUser;
 }
 
 bool Bank::isInTable(string name){
@@ -116,7 +95,7 @@ bool Bank::isInTable(string name){
   int index = getHash(name);
   User *tempUser = account[index];
   while(tempUser!=NULL){
-    if((tempUser->name).compare(name)==0){
+    if((tempUser->getName()).compare(name)==0){
       return true;
     }
     tempUser = tempUser->next;
