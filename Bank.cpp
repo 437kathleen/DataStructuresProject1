@@ -18,9 +18,10 @@ class Bank{
     ~Bank();
 
     //int countLines(string myfile);//count lines in file
-    bool loadFile(string myfile);//makes hashtable
+    bool loadFile(string myfile);//makes entries of data
   
     void saveFile(string myfile);//****************need to implement
+    User *getUser(string name, string password);
   
     void addSavedUser(User *savedUser);
     void addUser(string name);
@@ -74,6 +75,10 @@ bool Bank::loadFile(string myfile){
 
 void Bank::saveFile(string myfile){//**************not finished need to be changed
 
+}
+
+User *Bank::getUser(string name, string password){//find user...return the user for later actions
+  
 }
 
 void Bank::addSavedUser(User *savedUser){
