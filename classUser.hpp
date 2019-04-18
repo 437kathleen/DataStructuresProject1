@@ -1,3 +1,7 @@
+
+#ifndef USER_HPP
+#define USER_HPP
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -17,26 +21,33 @@ class User{
     string password;
     float balance;
     float debt;
-    User *next;
-    transaction *historyHead;
+
     string transactionFile;
-  
+    transaction *historyHead;
+
     void printPublicHistory();
     void printPersonalHistory();
     void loadTransactions(string fileName);
 
   public:
+    User *next;
     User();
-  
+    User(string n, string p);
+
     ~User();
-    void getName();
-    void getBalance(bool tf);
-    void getDebt(bool tf);
-    void deposit(bool tf, int money);//check for negative amounts
-    void withdrawal(bool tf, int money);//check over draw
-    void saveTransactions();//save into a file
-  
-    void printHistory(bool tf);//call either public or personal
+
+
+    string getName();
+
+    void getBalance(bool isUser);
+    void getDebt(bool isUser);
+    void deposit(bool isUser);//check for negative amounts
+    void withdrawal(bool isUser);//check over draw
+    void saveTransactions();
+
+    void printHistory(bool isUser);//call either public or personal
     void loadUserInfo(string line);
     void addTransaction(string line);
 };
+
+#endif
