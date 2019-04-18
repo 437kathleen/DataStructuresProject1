@@ -1,4 +1,5 @@
 
+
 #ifndef USER_HPP
 #define USER_HPP
 
@@ -13,6 +14,11 @@ struct transaction{
   float amount;
   string name;
   transaction *next;
+  transaction(float a, string n){
+    amount = a;
+    name = n;
+    next = NULL;
+  }
 };
 
 class User{
@@ -39,15 +45,16 @@ class User{
 
     string getName();
 
-    void getBalance(bool isUser);
-    void getDebt(bool isUser);
+    float getBalance();
+    float getDebt();
     void deposit(bool isUser);//check for negative amounts
     void withdrawal(bool isUser);//check over draw
+
     void saveTransactions();
 
     void printHistory(bool isUser);//call either public or personal
     void loadUserInfo(string line);
-    void addTransaction(string line);
+    void addTransaction(float price, string title);
 };
 
 #endif
