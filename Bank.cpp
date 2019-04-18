@@ -57,7 +57,13 @@ void Bank::saveFile(string myfile){
 }
 
 User *Bank::getUser(string name, string password){
-  //find hash look for user and return
+  // Does not check for password
+  if (isInTable(name)){
+    int name_hash = getHash(name);
+    return table[name_hash];
+  }else{
+    return NULL;
+  }
 }
 
 void Bank::addSavedUser(User *savedUser){
