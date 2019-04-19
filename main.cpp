@@ -2,10 +2,17 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 //#include "Bank.hpp"
 #include "User.hpp"
 #include "Bank.hpp"
 
+/*
+
+cd Desktop\2270\Bank
+g++ -std=c++11 bank.cpp bank.hpp main.cpp user.hpp user.cpp -o banking
+
+*/
 using namespace std;
 
 void transferFunds(string user1, string user2, int money);//user1 is user loggedin
@@ -14,6 +21,7 @@ int main(int argc, char *argv[]){
   Bank B(100);//parameter arbitary
   //int count = countLines(argv[2]);
   string ans;
+  B.numCollisions();
   cout<<"Load bank file: "<<endl;
   getline(cin,ans);
   bool loaded = B.loadFile(ans);///read in users and assign info appropriately
@@ -21,8 +29,9 @@ int main(int argc, char *argv[]){
     string name, password;
     bool loginContinue = true;
     User *currentUser;
+    cout<<"\nWelcome\n";
     do{
-      cout<<"\nWelcome\n\t1) New User \n\t2) Returning User \n\t3) Quit"<<endl;
+      cout<<"\t1) New User \n\t2) Returning User \n\t3) Quit"<<endl;
       getline(cin,ans);
       cout<<endl;
       if(stoi(ans) == 1){
@@ -39,9 +48,15 @@ int main(int argc, char *argv[]){
         cout<<"Password: ";
         getline(cin,password);
         cout<<endl;
-        currentUser = B.getUser(name, password);//add a user..return the user for later actions
-        cout<<currentUser->getName()<<endl;
-        break;
+        currentUser = B.login(name,password);
+          if(currentUser != NULL){
+            cout<<"Login successful!"<<endl;
+            break;
+          }else{
+            cout<<"Incorrect"<<endl;
+          }
+        //currentUser = B.getUser(name, password);//add a user..return the user for later actions
+        //cout<<currentUser->getName()<<endl;
       }else if(stoi(ans) == 3){
         cout<<"GOODBYE"<<endl;
         loginContinue = false;
@@ -54,9 +69,9 @@ int main(int argc, char *argv[]){
       cout<<"Options:\n\t1) Show balance\n\t2) Show Debt\n\t3) Make a Deposit\n\t4) Make a Withdrawal\n\t5) Show Past History\n\t6) Transfer Money\n\t7) Quit\n";
       getline(cin, ans);
       if(stoi(ans) == 1){
-        currentUser->getBalance(true);
+        cout<<"$"<<setprecision(2)<<fixed<<currentUser->getBalance()<<endl;
       }else if(stoi(ans) == 2){
-        currentUser->getDebt(true);
+        cout<<"-$"<<setprecision(2)<<fixed<<currentUser->getDebt()<<endl;
       }else if(stoi(ans) == 3){
         currentUser->deposit(true);//show updated balance if true user...//ask amount and catch negatives
       }else if(stoi(ans) == 4){
@@ -72,7 +87,7 @@ int main(int argc, char *argv[]){
         cout<<"Invalid choice"<<endl;
       }
     }
-    //B.saveFile(ans);
+    B.saveFile(ans);
     cout<<"System shutdown"<<endl;
   }else{
     //no history file
