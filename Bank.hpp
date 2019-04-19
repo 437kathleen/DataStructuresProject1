@@ -25,7 +25,8 @@ class Bank{
     bool loadFile(string myfile);//
 
     void saveFile(string myfile);//****************need to implement
-    User *getUser(string name, string password);
+    User *login(string name, string password);
+    User *getUser(string name);
 
     void addSavedUser(User *savedUser);
     User *addUser(string name, string password);
@@ -36,3 +37,4 @@ class Bank{
 };
 
 #endif
+
