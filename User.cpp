@@ -1,4 +1,4 @@
-//Functions
+
 
 #include <iostream>
 #include <fstream>
@@ -14,11 +14,12 @@ void User::printPublicHistory(){
     cout<<"No history"<<endl;
   }else{
     transaction *temp = historyHead;
-    int i = 0;
+    int i = 1;
     cout<<"HISTORY"<<endl;
     while(temp!=NULL){
-      cout<<"\t"<<i<<": "<<temp->name<<endl;
+      cout<<"\t"<<i<<") "<<temp->name<<endl;
       temp = temp->next;
+      i++;
     }
     cout<<"\t\tEND HISTORY"<<endl;
   }
@@ -29,13 +30,14 @@ void User::printPersonalHistory(){
     cout<<"No history"<<endl;
   }else{
     transaction *temp = historyHead;
-    int i = 0;
+    int i = 1;
     cout<<"HISTORY"<<endl;
     while(temp!=NULL){
-      cout<<"\t"<<setw(30)<<temp->name<<"$"<<setprecision(2)<<fixed<<temp->amount<<endl;
+      cout<<"\t"<<i<<") "<<temp->name<<"\t$"<<setprecision(2)<<fixed<<temp->amount<<endl;
       temp = temp->next;
+      i++;
     }
-    cout<<"\t\tEND HISTORY"<<endl;
+    cout<<"END HISTORY"<<endl<<endl;
   }
 }
 
@@ -85,6 +87,10 @@ string User::getName(){
   return name;
 }
 
+string User::getPassword(){
+  return password;
+}
+
 float User::getBalance(){//decimal
   return this->balance;
 }
@@ -102,11 +108,12 @@ void User::deposit(bool isUser){//check for negative amounts
     cout<<"Illegal Amount"<<endl;
     return;
   }
+  addTransaction(money,"Deposit");
   if(isUser == true){//add and show total
-    this->balance = balance + money;
-    cout<<balance<<endl;
+    this->balance = getBalance() + money;
+    cout<<"New Balance: $"<<setprecision(2)<<fixed<<getBalance()<<endl;
   }else{//just add
-    this->balance = balance + money;
+    this->balance = getBalance() + money;
   }
 }
 
@@ -119,6 +126,7 @@ void User::withdrawal(bool isUser){//check over draw
     cout<<"Illegal Amount"<<endl;
     return;
   }
+  addTransaction(money,"Withdrawal");
   if(isUser == true){//add and show total
     this->balance = balance - money;
     cout<<balance<<endl;
