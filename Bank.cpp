@@ -52,11 +52,59 @@ bool Bank::loadFile(string myfile){
 }
 
 void Bank::saveFile(string myfile){
+  std::cout << "saving file\n";
+  std::ofstream save_file(myfile);
+  std::string name, pswd;
+  float bal, debt;
+
+  if (!save_file){
+    std::cout << "cannot open file\n";
+    return;
+  }
+
+  for (int i =0;i<tableSize; i++){
+    if (account[i]!=NULL){
+      name = account[i]->getName();
+      debt = account[i]->getDebt();
+      bal = account[i]->getBalance();
+      pswd = account[i]->getPassword();
+
+      save_file << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
+      std::cout << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
+    }
+  }
+
+  return;
   //overwrite the file
 }
 
-User *Bank::getUser(string name, string password){
+User *Bank::login(string name, string password){
+  User *temp = getUser(name);
+  if(temp!=NULL){
+    //check passwords match
+    if((temp->getPassword()).compare(password)==0){
+      return temp;
+    }
+  }
+  return temp;
+}
+
+User *Bank::getUser(string name){
   //find hash look for user and return
+  if(isInTable(name)==true){
+    int index = getHash(name);
+    User *temp = account[index];
+    while(temp!=NULL){
+      if((temp->getName()).compare(name)==0){
+        return temp;
+      }
+      temp = temp->next;
+    }
+  }else{
+    cout<<"User does not exist"<<endl;
+    return NULL;
+  }
+
 }
 
 void Bank::addSavedUser(User *savedUser){
@@ -115,8 +163,8 @@ int Bank::findAscii(string name){//return ascii value
 
 int Bank::getHash(string name){//returns index
   int value = findAscii(name);
-  int index = value%tableSize;
-  cout<<"name: "<<name<<"  index: "<< index<< endl;
+  int index = value%100;
+  //cout<<"name: "<<name<<"  index: "<< index<< endl;
   return index;
 }
 
