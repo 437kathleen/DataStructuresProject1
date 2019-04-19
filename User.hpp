@@ -44,6 +44,7 @@ class User{
 
 
     string getName();
+    string getPassword();
 
     float getBalance();
     float getDebt();
