@@ -72,15 +72,15 @@ void Bank::saveFile(string myfile){
         bal = tmp_trav->getBalance();
         pswd = tmp_trav->getPassword();
         save_file << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
-        std::cout << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
+        //std::cout << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
         
         tmp_trav = tmp_trav->next;
       }
     }
   }
 
+  std::cout << "File successfully saved save to " << myfile;
   return;
-  //overwrite the file
 }
 
 User *Bank::login(string name, string password){

@@ -87,6 +87,8 @@ int main(int argc, char *argv[]){
         cout<<"Invalid choice"<<endl;
       }
     }
+    cout<<"Enter filename to save to (typically \"userInfo\"):\n";
+    getline(cin,ans);
     B.saveFile(ans);
     cout<<"System shutdown"<<endl;
   }else{
