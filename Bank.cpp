@@ -52,25 +52,30 @@ bool Bank::loadFile(string myfile){
 }
 
 void Bank::saveFile(string myfile){
-  std::cout << "saving file\n";
-  std::ofstream save_file(myfile);
+  std::cout << "Saving file under name: " << myfile << "\n";
+  std::ofstream save_file(myfile); // careful, this overwrites the file!!
   std::string name, pswd;
   float bal, debt;
+  User* tmp_trav = NULL;
 
   if (!save_file){
     std::cout << "cannot open file\n";
     return;
   }
 
-  for (int i =0;i<tableSize; i++){
-    if (account[i]!=NULL){
-      name = account[i]->getName();
-      debt = account[i]->getDebt();
-      bal = account[i]->getBalance();
-      pswd = account[i]->getPassword();
-
-      save_file << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
-      std::cout << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
+  for (int i =0;i<tableSize; i++){ // for every element in the HT
+    if (account[i]!=NULL){ //  if the element exists (is a valid user)
+      tmp_trav = account[i];
+      while (tmp_trav != NULL){ // go throught linked list printing the names
+        name = tmp_trav->getName();
+        debt = tmp_trav->getDebt();
+        bal = tmp_trav->getBalance();
+        pswd = tmp_trav->getPassword();
+        save_file << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
+        std::cout << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
+        
+        tmp_trav = tmp_trav->next;
+      }
     }
   }
 
