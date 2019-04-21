@@ -1,5 +1,3 @@
-
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -51,8 +49,6 @@ void User::loadTransactions(string fileName){
       stringstream ss;
       ss<<line;
       getline(ss,item,',');
-      price = stof(item);
-      getline(ss,item);
       title = item;
       addTransaction(price,title);
     }
@@ -136,7 +132,25 @@ void User::withdrawal(bool isUser){//check over draw
 }
 
 void User::saveTransactions(){
+  transaction* transac_trav = this->historyHead;
+  std::ofstream save_file(this->name + "_test.txt");
+  float amt; // seem to be flipped
+  std::string name;
 
+  std::cout << this->name << " has the following info:\n";
+
+  while(transac_trav != NULL){
+    amt = transac_trav->amount;
+    name = transac_trav->name; // something wrong with ->name, only prints 0's.
+
+    save_file << name << "," << amt << "\n";
+    std::cout << name << "," << amt << "\n";
+
+    transac_trav = transac_trav->next;
+  }
+
+  save_file.close();
+  return;
 }
 
 void User::printHistory(bool tf){
