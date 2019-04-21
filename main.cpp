@@ -21,10 +21,11 @@ int main(int argc, char *argv[]){
   Bank B(100);//parameter arbitary
   //int count = countLines(argv[2]);
   string ans;
+  string rw_filename; // stores read/ write filename for use when saving
   B.numCollisions();
   cout<<"Load bank file: "<<endl;
-  getline(cin,ans);
-  bool loaded = B.loadFile(ans);///read in users and assign info appropriately
+  getline(cin,rw_filename);
+  bool loaded = B.loadFile(rw_filename);///read in users and assign info appropriately
   if(loaded == true){//loaded file or empty file
     string name, password;
     bool loginContinue = true;
@@ -87,9 +88,7 @@ int main(int argc, char *argv[]){
         cout<<"Invalid choice"<<endl;
       }
     }
-    cout<<"Enter filename to save to (typically \"userInfo\"):\n";
-    getline(cin,ans);
-    B.saveFile(ans);
+    B.saveFile(rw_filename);
     cout<<"System shutdown"<<endl;
   }else{
     //no history file

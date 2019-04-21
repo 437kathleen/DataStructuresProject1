@@ -52,7 +52,6 @@ bool Bank::loadFile(string myfile){
 }
 
 void Bank::saveFile(string myfile){
-  std::cout << "Saving file under name: " << myfile << "\n";
   std::ofstream save_file(myfile); // careful, this overwrites the file!!
   std::string name, pswd;
   float bal, debt;
@@ -79,7 +78,6 @@ void Bank::saveFile(string myfile){
     }
   }
 
-  std::cout << "File successfully saved save to " << myfile;
   return;
 }
 
