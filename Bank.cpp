@@ -70,7 +70,11 @@ void Bank::saveFile(string myfile){
         debt = tmp_trav->getDebt();
         bal = tmp_trav->getBalance();
         pswd = tmp_trav->getPassword();
-        save_file << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
+
+        save_file << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n"; // write to userInfo file
+        
+        tmp_trav->saveTransactions(); // save user transaction list
+
         //std::cout << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
         
         tmp_trav = tmp_trav->next;
@@ -78,6 +82,7 @@ void Bank::saveFile(string myfile){
     }
   }
 
+  save_file.close();
   return;
 }
 
