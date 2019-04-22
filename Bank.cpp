@@ -10,8 +10,6 @@ using namespace std;
 
 Bank::Bank(int tableSize){
   collisions = 0;
-  //tableSize = 100;
-  //this->numAccounts = tableSize;
   this->tableSize = tableSize;
   account = new User*[tableSize];
   for(int i=0;i<tableSize;i++){
@@ -30,7 +28,7 @@ Bank::~Bank(){
     }
     //delete hashTable[i];
   }
-}//delete
+}
 
 bool Bank::loadFile(string myfile){
   bool loaded = false;
@@ -52,38 +50,22 @@ bool Bank::loadFile(string myfile){
 }
 
 void Bank::saveFile(string myfile){
-  std::ofstream save_file(myfile); // careful, this overwrites the file!!
-  std::string name, pswd;
-  float bal, debt;
-  User* tmp_trav = NULL;
-
+  ofstream save_file(myfile);
+  string name;
   if (!save_file){
-    std::cout << "cannot open file\n";
+    cout << "cannot open file\n";
     return;
   }
-
-  for (int i =0;i<tableSize; i++){ // for every element in the HT
-    if (account[i]!=NULL){ //  if the element exists (is a valid user)
-      tmp_trav = account[i];
-      while (tmp_trav != NULL){ // go throught linked list printing the names
-        name = tmp_trav->getName();
-        debt = tmp_trav->getDebt();
-        bal = tmp_trav->getBalance();
-        pswd = tmp_trav->getPassword();
-
-        save_file << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n"; // write to userInfo file
-        
-        tmp_trav->saveTransactions(); // save user transaction list
-
-        //std::cout << name << "," << pswd << "," << bal << "," << debt << "," << name << ".txt\n";
-        
-        tmp_trav = tmp_trav->next;
-      }
+  for (int i = 0;i<tableSize; i++){
+    User *temp = account[i];
+    while (temp!=NULL){
+      name = temp->getName();
+      save_file << name << "," << temp->getPassword() << "," << temp->getBalance() << "," << name << ".txt\n";
+      temp->saveTransactions();
+      temp = temp->next;
     }
   }
-
-  save_file.close();
-  return;
+  return;//overwrite the file
 }
 
 User *Bank::login(string name, string password){
@@ -94,7 +76,7 @@ User *Bank::login(string name, string password){
       return temp;
     }
   }
-  return temp;
+  return NULL;
 }
 
 User *Bank::getUser(string name){
@@ -112,7 +94,16 @@ User *Bank::getUser(string name){
     cout<<"User does not exist"<<endl;
     return NULL;
   }
+}
 
+void Bank::transferFunds(User *currentUser, string userName, float money){
+  User *UserToTransferTo = getUser(userName);
+  if(UserToTransferTo != NULL){
+    bool enoughMoney = currentUser->withdrawal(true,money);//take money from user
+    if(enoughMoney == true){
+      UserToTransferTo->deposit(false,money);
+    }
+  }
 }
 
 void Bank::addSavedUser(User *savedUser){
@@ -120,10 +111,8 @@ void Bank::addSavedUser(User *savedUser){
   if(account[index]!=NULL){///moniter collisions
     collisions++;
   }
-  //cout<<"adding a saved user"<<endl;
   savedUser->next = account[index];//push to front
   account[index] = savedUser;
-  //cout<<"here"<<endl;
 }
 
 User *Bank::addUser(string name, string password){
@@ -134,8 +123,6 @@ User *Bank::addUser(string name, string password){
       if(account[index]!=NULL){///moniter collisions
         collisions++;
       }
-      // create a new user with the name and password and insert it in this index's list
-      //User *newUser = new User;
       newUser->next = account[index];//push to front
       account[index] = newUser;
   }else{
@@ -165,14 +152,12 @@ int Bank::findAscii(string name){//return ascii value
     sum = sum + int(name[i]);
     i++;
   }
-  //cout<<"Ascii: "<< sum << endl;
   return sum;
 }
 
 int Bank::getHash(string name){//returns index
   int value = findAscii(name);
   int index = value%100;
-  //cout<<"name: "<<name<<"  index: "<< index<< endl;
   return index;
 }
 
