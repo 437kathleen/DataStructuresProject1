@@ -49,19 +49,18 @@ void User::loadTransactions(string fileName){
       stringstream ss;
       ss<<line;
       getline(ss,item,',');
+      price = stof(item);
+      getline(ss,item);
       title = item;
       addTransaction(price,title);
     }
-  }//else{
-    //cout<<"Transactions could not be found"<<endl;
-  //}
+  }
 }
 
 User::User(){
   name = "";
   password = "";
   balance = 0.0;
-  debt = 0.0;
   next = NULL;
   historyHead = NULL;
   transactionFile = "";
@@ -71,12 +70,18 @@ User::User(string n, string p){
   name = n;
   password = p;
   balance = 0.0;
-  debt = 0.0;
   historyHead = NULL;
+  transactionFile = n + ".txt";
 }
 
 User::~User(){
-
+  transaction *temp = historyHead;
+  while(historyHead != NULL){
+    temp = historyHead;
+    historyHead = historyHead->next;
+    delete temp;
+  }
+  //delete users
 }
 
 string User::getName(){
@@ -91,15 +96,7 @@ float User::getBalance(){//decimal
   return this->balance;
 }
 
-float User::getDebt(){//demcimal
-  return this->debt;
-}
-
-void User::deposit(bool isUser){//check for negative amounts
-  string ans;//how to narrwo to two decimals;
-  cout<<"Deposit amount: \n$";
-  getline(cin,ans);
-  float money = stof(ans);
+void User::deposit(bool isUser, float money){//check for negative amounts
   if(money<0){
     cout<<"Illegal Amount"<<endl;
     return;
@@ -113,14 +110,10 @@ void User::deposit(bool isUser){//check for negative amounts
   }
 }
 
-void User::withdrawal(bool isUser){//check over draw
-  string ans;//how to narrwo to two decimals;
-  cout<<"Withdrawal amount: \n$";
-  getline(cin,ans);
-  float money = stof(ans);
-  if(money<0){
+bool User::withdrawal(bool isUser, float money){//check over draw
+  if(money<0 || money > getBalance()){
     cout<<"Illegal Amount"<<endl;
-    return;
+    return false;
   }
   addTransaction(money,"Withdrawal");
   if(isUser == true){//add and show total
@@ -129,28 +122,21 @@ void User::withdrawal(bool isUser){//check over draw
   }else{//just add
     this->balance = balance - money;
   }
+  return true;
 }
 
 void User::saveTransactions(){
-  transaction* transac_trav = this->historyHead;
-  std::ofstream save_file(this->name + "_test.txt");
-  float amt; // seem to be flipped
-  std::string name;
-
-  std::cout << this->name << " has the following info:\n";
-
-  while(transac_trav != NULL){
-    amt = transac_trav->amount;
-    name = transac_trav->name; // something wrong with ->name, only prints 0's.
-
-    save_file << name << "," << amt << "\n";
-    std::cout << name << "," << amt << "\n";
-
-    transac_trav = transac_trav->next;
+  ofstream myfile(transactionFile);
+  if(myfile.is_open()){
+    transaction *temp = historyHead;
+    while(temp!=NULL){
+      myfile << temp->amount <<","<< temp->name << endl;
+      //cout << getName() << temp->amount <<","<< temp->name << endl;
+      temp = temp->next;
+    }
+    return;
   }
-
-  save_file.close();
-  return;
+  //cout<<"Cannot open file\n";
 }
 
 void User::printHistory(bool tf){
@@ -163,7 +149,7 @@ void User::printHistory(bool tf){
 
 void User::loadUserInfo(string line){
   //File construct will be formatted like so
-  // name,password,balance,debt,(file name for transactions)
+  // name,password,balance,(file name for transactions)
   //cout<<"load user info - function"<<endl;
   string item;
   stringstream ss;
@@ -174,8 +160,6 @@ void User::loadUserInfo(string line){
   password = item;
   getline(ss, item,',');
   balance = stof(item);
-  getline(ss, item,',');
-  debt = stof(item);
   getline(ss, item);
   transactionFile = item;
   loadTransactions(transactionFile);
