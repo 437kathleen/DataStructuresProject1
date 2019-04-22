@@ -21,14 +21,13 @@ class Bank{
     Bank(int tableSize);
     ~Bank();
 
-    //int countLines(string myfile);//count lines in file
-    bool loadFile(string myfile);//
+    bool loadFile(string myfile);//take file and read in lines.. pass likes to loadUserInfo of user class
 
-    void saveFile(string myfile);//****************need to implement
+    void saveFile(string myfile);//
     User *login(string name, string password);
     User *getUser(string name);
-
-    void addSavedUser(User *savedUser);
+    void transferFunds(User *currentUser, string userName, float money);
+    void addSavedUser(User *savedUser);//
     User *addUser(string name, string password);
     bool isInTable(string name);
     int findAscii(string name);
@@ -37,4 +36,3 @@ class Bank{
 };
 
 #endif
-
