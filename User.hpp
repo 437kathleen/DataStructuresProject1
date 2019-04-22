@@ -1,5 +1,4 @@
 
-
 #ifndef USER_HPP
 #define USER_HPP
 
@@ -26,7 +25,6 @@ class User{
     string name;
     string password;
     float balance;
-    float debt;
 
     string transactionFile;
     transaction *historyHead;
@@ -47,9 +45,8 @@ class User{
     string getPassword();
 
     float getBalance();
-    float getDebt();
-    void deposit(bool isUser);//check for negative amounts
-    void withdrawal(bool isUser);//check over draw
+    void deposit(bool isUser, float money);//check for negative amounts
+    bool withdrawal(bool isUser, float money);//check over draw
 
     void saveTransactions();
 
