@@ -26,7 +26,7 @@ class Bank{
     void saveFile(string myfile);//
     User *login(string name, string password);
     User *getUser(string name);
-    void transferFunds(User *currentUser, string userName, float money);
+    void transferFunds(User *currentUser, User *UserToTransferTo);
     void addSavedUser(User *savedUser);//
     User *addUser(string name, string password);
     bool isInTable(string name);
