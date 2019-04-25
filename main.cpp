@@ -30,12 +30,11 @@ int main(int argc, char *argv[]){
     User *currentUser;
     //bool shutDown = false;
     do{
-      cout<<"\nWelcome\n";
+      cout<<"\nWelcome";
       do{
-        cout<<"\t1) New User \n\t2) Returning User \n\t3) Quit"<<endl;
+        cout<<"\n\t1) New User \n\t2) Returning User \n\t3) Quit"<<endl;
         getline(cin,ans);
-        cout<<endl;
-        if(stoi(ans) == 1){
+        if(ans.compare("1") == 0){
           cout<<"Username: ";
           getline(cin, name);
           cout<<"Password: ";
@@ -43,12 +42,9 @@ int main(int argc, char *argv[]){
           cout<<endl;
           currentUser = B.addUser(name, password);//add a user..return the user for later actions
           if(currentUser != NULL){
-            cout<<"Login successful!"<<endl;
             break;
-          }else{
-            cout<<"Incorrect"<<endl;
           }
-        }else if(stoi(ans) == 2){
+        }else if(ans.compare("2") == 0){
           cout<<"Username: ";
           getline(cin, name);
           cout<<"Password: ";
@@ -56,48 +52,55 @@ int main(int argc, char *argv[]){
           cout<<endl;
           currentUser = B.login(name,password);
             if(currentUser != NULL){
-              cout<<"Login successful!"<<endl;
               break;
-            }else{
-              cout<<"Incorrect"<<endl;
             }
-        }else if(stoi(ans) == 3){
+        }else if(ans.compare("3") == 0){
           loginContinue = false;
-          cout<<"GOODBYE"<<endl;
         }else{
           cout<<"Invalid choice"<<endl;
         }
       }while(loginContinue == true);
+
+
       float money = 0;
+      if(loginContinue == true) cout<<"Welcome, "<< currentUser->getName()<<"!"<<endl;
       while(loginContinue == true){//ensures that there is a user
-        cout<<"Options:\n\t1) Show balance\n\t2) Make a Deposit\n\t3) Make a Withdrawal\n\t4) Show Past History\n\t5) Transfer Money\n\t6) Log out\n";
+        cout<<"\nOptions:\n\t1) Show balance\n\t2) Make a Deposit\n\t3) Make a Withdrawal\n\t4) Show Past History\n\t5) Look up user\n\t6) Log out\n";
         getline(cin, ans);
-        if(stoi(ans) == 1){
-          cout<<"$"<<setprecision(2)<<fixed<<currentUser->getBalance()<<endl;
-        }else if(stoi(ans) == 2){
+        if(ans.compare("1") == 0){
+          cout<<"Current Balance: $"<<setprecision(2)<<fixed<<currentUser->getBalance()<<endl;
+        }else if(ans.compare("2") == 0){
           cout<<"Deposit amount: \n$";
           getline(cin,ans);
           money = stof(ans);
           currentUser->deposit(true, money);//show updated balance if true user...//ask amount and catch negatives
-        }else if(stoi(ans) == 3){
+        }else if(ans.compare("3") == 0){
           cout<<"Withdrawal amount: \n$";
           getline(cin,ans);
           money = stof(ans);
-          currentUser->withdrawal(true, money);//show updated balance if true user...//ask amount and catch negatives
-        }else if(stoi(ans) == 4){
+          currentUser->withdrawal(money);//show updated balance if true user...//ask amount and catch negatives
+        }else if(ans.compare("4") == 0){
           currentUser->printHistory(true);
-        }else if(stoi(ans) == 5){//transfer money//implement look up and use deposit and withdrawal to do action
-          cout<<"Who would you like to transfer funds to: \n$";
+        }else if(ans.compare("5") == 0){//transfer money//implement look up and use deposit and withdrawal to do action
+          cout<<"Search: "<<endl;
           getline(cin,ans);
-          string UserToTransferTo = ans;
-          cout<<"How much would you like to transfer: \n$";
-          getline(cin,ans);
-          money = stof(ans);
-          B.transferFunds(currentUser, UserToTransferTo, money);
-          //cout<<"transfer"<<endl;
-        }else if(stoi(ans) == 6){
-          cout<<"GOODBYE"<<endl;
-          //loginContinue = false;
+          User* searchUser = B.getUser(ans);
+          if(searchUser != NULL){
+            cout<<"User found!"<<endl;
+            while(loginContinue == true){
+              cout<<"\nOptions:\n\t1) Transfer Funds\n\t2) View History\n\t3) Go Back\n";
+              getline(cin,ans);
+              if(ans.compare("1") == 0){
+                B.transferFunds(currentUser, searchUser);
+              }else if(ans.compare("2") == 0){
+                searchUser->printHistory(false);
+              }else{
+                break;
+              }
+            }
+          }
+        }else if(ans.compare("6") == 0){
+          cout<<"Goodbye, "<<currentUser->getName()<<endl;
           break;
         }else{
           cout<<"Invalid choice"<<endl;
