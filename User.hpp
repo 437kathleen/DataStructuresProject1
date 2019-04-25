@@ -25,7 +25,6 @@ class User{
     string name;
     string password;
     float balance;
-
     string transactionFile;
     transaction *historyHead;
 
@@ -43,10 +42,10 @@ class User{
 
     string getName();
     string getPassword();
-
+    string getTransactionFileName();
     float getBalance();
     void deposit(bool isUser, float money);//check for negative amounts
-    bool withdrawal(bool isUser, float money);//check over draw
+    bool withdrawal(float money);//check over draw
 
     void saveTransactions();
 
