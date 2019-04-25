@@ -35,7 +35,7 @@ void User::printPersonalHistory(){
       temp = temp->next;
       i++;
     }
-    cout<<"END HISTORY"<<endl<<endl;
+    cout<<"END HISTORY"<<endl;
   }
 }
 
@@ -92,6 +92,10 @@ string User::getPassword(){
   return password;
 }
 
+string User::getTransactionFileName(){
+  return transactionFile;
+}
+
 float User::getBalance(){//decimal
   return this->balance;
 }
@@ -110,18 +114,14 @@ void User::deposit(bool isUser, float money){//check for negative amounts
   }
 }
 
-bool User::withdrawal(bool isUser, float money){//check over draw
+bool User::withdrawal(float money){//check over draw
   if(money<0 || money > getBalance()){
     cout<<"Illegal Amount"<<endl;
     return false;
   }
   addTransaction(money,"Withdrawal");
-  if(isUser == true){//add and show total
-    this->balance = balance - money;
-    cout<<balance<<endl;
-  }else{//just add
-    this->balance = balance - money;
-  }
+  this->balance = balance - money;
+  cout<<"New Balance: "<<balance<<endl;
   return true;
 }
 
