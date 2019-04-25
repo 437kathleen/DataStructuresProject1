@@ -60,7 +60,7 @@ void Bank::saveFile(string myfile){
     User *temp = account[i];
     while (temp!=NULL){
       name = temp->getName();
-      save_file << name << "," << temp->getPassword() << "," << temp->getBalance() << "," << name << ".txt\n";
+      save_file << name << "," << temp->getPassword() << "," << temp->getBalance() << "," << temp->getTransactionFileName() << "\n";
       temp->saveTransactions();
       temp = temp->next;
     }
@@ -76,6 +76,7 @@ User *Bank::login(string name, string password){
       return temp;
     }
   }
+  cout<<"ERROR"<<endl;
   return NULL;
 }
 
@@ -91,18 +92,28 @@ User *Bank::getUser(string name){
       temp = temp->next;
     }
   }else{
-    cout<<"User does not exist"<<endl;
+    cout<<"ERROR"<<endl;
     return NULL;
   }
 }
 
-void Bank::transferFunds(User *currentUser, string userName, float money){
-  User *UserToTransferTo = getUser(userName);
+void Bank::transferFunds(User *currentUser, User *UserToTransferTo){
+  string ans;
+  cout<<"How much would you like to transfer: \n$";
+  getline(cin,ans);
+  float money = stof(ans);
+  if((currentUser->getName()).compare(UserToTransferTo->getName()) == 0){//user transfers to themselves
+    currentUser->withdrawal(money);
+    currentUser->deposit(true,money);
+    return;
+  }
   if(UserToTransferTo != NULL){
-    bool enoughMoney = currentUser->withdrawal(true,money);//take money from user
+    bool enoughMoney = currentUser->withdrawal(money);//take money from user
     if(enoughMoney == true){
       UserToTransferTo->deposit(false,money);
     }
+  }else{
+    cout<<"User not found"<<endl;
   }
 }
 
